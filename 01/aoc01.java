@@ -10,21 +10,17 @@ public class aoc01 {
     BufferedReader br = new BufferedReader(new FileReader(file));
 
     String line;
-    int elfCount = 0;
-    int largestElf = -1;
     int calorieCount = 0;
-    int maxCalories = 0;
+    int maxCalories = -1;
 
     while ((line = br.readLine()) != null) {
       line = line.trim();
       if (line.isEmpty()) {
         // blank line, update variables
-        if (largestElf < 0 || calorieCount > maxCalories) {
+        if (maxCalories < 0 || calorieCount > maxCalories) {
           // set this as the largest elf
-          largestElf = elfCount;
           maxCalories = calorieCount;
         }
-        elfCount++;
         calorieCount = 0;
       } else {
         // parse the line to an int
@@ -33,7 +29,7 @@ public class aoc01 {
       }
     }
 
-    System.out.printf("Elf %d has %d calories\n", largestElf, maxCalories);
+    System.out.printf("%d calories\n", maxCalories);
 
     br.close();
   }
