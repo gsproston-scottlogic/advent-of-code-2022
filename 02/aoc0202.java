@@ -4,23 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class aoc02 {
-  // 0 = draw, -1 = player loss, 1 = player win
-  private static int outcome(final char playerChoice, final char opponentChoice) {
-    int diff = opponentChoice - playerChoice;
-    switch (diff) {
-      // opponent win
-      case -2:
-      case 1:
+public class aoc0202 {
+  public static int decryptOutcome(final char encryptedOutcome) {
+    switch (encryptedOutcome) {
+      case 'X':
         return -1;
-      // player win
-      case -1:
-      case 2:
-        return 1;
-      // draw
-      case 0:
-      default:
+      case 'Y':
         return 0;
+      case 'Z':
+        return 1;
+      default:
+        return -2;
     }
   }
 
@@ -35,6 +29,17 @@ public class aoc02 {
       default:
         return -1;
     }
+  }
+
+  private static char playerChoiceFromOutcome(final int outcome, final char opponentChoice) {
+    char playerChoice = (char) ((int) opponentChoice + outcome);
+    // range check
+    if (playerChoice < 'A') {
+      playerChoice = 'C';
+    } else if (playerChoice > 'C') {
+      playerChoice = 'A';
+    }
+    return playerChoice;
   }
 
   private static int shapeScore(final char shape) {
@@ -59,10 +64,9 @@ public class aoc02 {
 
     while ((line = br.readLine()) != null) {
       char opponentChoice = line.charAt(0);
-      char playerChoice = line.charAt(2);
-      // convert player choice to A B C
-      playerChoice -= ('Z' - 'C');
-      int outcome = outcome(playerChoice, opponentChoice);
+      char desiredOutcome = line.charAt(2);
+      int outcome = decryptOutcome(desiredOutcome);
+      char playerChoice = playerChoiceFromOutcome(outcome, opponentChoice);
       int score = outcomeScore(outcome) + shapeScore(playerChoice);
       System.out.printf("PLR %c CPU %c outcome: %d score: %d\n",
           playerChoice, opponentChoice, outcome, score);
